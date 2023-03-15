@@ -13,8 +13,9 @@ app.use(bodyParser.json());
 
 const connectDatabase = async () => {
   try {
+    console.log('start');
     await mongoose.connect(process.env.MONGO_URI);
-    console.log("Databse connected");
+    console.log("Database connected");
   } catch (error) {
     console.log(error);
   }
@@ -23,6 +24,7 @@ const connectDatabase = async () => {
 connectDatabase();
 
 // Middlewares routes
+
 app.use("/api", authRoutes);
 
 app.listen(PORT, () => console.log(`Server is listing on port ${PORT}`));
