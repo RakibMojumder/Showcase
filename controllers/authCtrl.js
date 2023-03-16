@@ -61,7 +61,8 @@ export const userLogin = async (req, res) => {
 
     res.cookie("token", accessToken, {
       maxAge: 7 * 24 * 60 * 60 * 1000,
-      httpOnly: false
+      httpOnly: true,
+      signed: true,
     });
 
     res.status(200).json({ status: true, token: accessToken })
@@ -76,6 +77,7 @@ export const userLogin = async (req, res) => {
 export const findUser = async (req, res) => {
   try {
     const { userId } = req.params;
+
     const user = await Users.findById(userId).select("-password")
     if (!user) {
       return res.status(400).json({ status: false, msg: "User Does not exist" })
@@ -114,7 +116,6 @@ export const updatePass = async (req, res) => {
   try {
     const { userId } = req.params;
     const { oldPass, newPass } = req.body;
-    console.log(oldPass, newPass);
 
     const validUser = await Users.findById(userId);
     if (!validUser) {
@@ -139,6 +140,12 @@ export const updatePass = async (req, res) => {
   } catch (error) {
     return res.status(400).json({ status: false, msg: error.message })
   }
+}
+
+
+export const userLogOut = (req, res) => {
+  res.clearCookie('token');
+  res.status(200).json("logout successful");
 }
 
 
